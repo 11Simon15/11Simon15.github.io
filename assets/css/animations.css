@@ -1,0 +1,137 @@
+/* ── Card pulse ───────────────────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.025); }
+}
+
+/* ── Drift loops — translateY -50% is exactly one strip height,
+   so when the loop restarts the visible content is byte-identical. ── */
+@keyframes drift-down {
+  from { transform: translate3d(0, -50%, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes drift-up {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, -50%, 0); }
+}
+
+/* ── Golf ball roll-to-flag ──────────────────────────────────────────── */
+@keyframes golf-roll {
+  0%   { transform: translateX(0); opacity: 1; }
+  65%  { transform: translateX(calc(var(--golf-icon-size, 48px) * 15 / 48)); opacity: 1; }
+  78%  { transform: translateX(calc(var(--golf-icon-size, 48px) * 15 / 48)); opacity: 0; }
+  82%  { transform: translateX(0); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.icon-golf { cursor: pointer; }
+
+.icon-golf:hover .golf-ball,
+.card:hover .icon-golf .golf-ball {
+  animation: golf-roll var(--anim-icon) ease-out infinite;
+}
+
+/* ── Stock graph: line draws in, dots + arrow fade in, then resets ──── */
+.icon-stock .stock-line { stroke-dasharray: 100; }
+
+.icon-stock:hover .stock-line,
+.card:hover .icon-stock .stock-line {
+  animation: stock-line var(--anim-icon) ease-out infinite;
+}
+
+.icon-stock:hover .stock-arrow,
+.icon-stock:hover .stock-dots,
+.card:hover .icon-stock .stock-arrow,
+.card:hover .icon-stock .stock-dots,
+.featured:hover .icon-stock .stock-arrow,
+.featured:hover .icon-stock .stock-dots {
+  animation: stock-trail var(--anim-icon) ease-out infinite;
+}
+
+/* Featured card: draw the trend line on whole-card hover too */
+.featured:hover .icon-stock .stock-line {
+  animation: stock-line var(--anim-icon) ease-out infinite;
+}
+
+@keyframes stock-line {
+  0%, 5%   { stroke-dashoffset: 100; opacity: 1; }
+  58%      { stroke-dashoffset: 0;   opacity: 1; }
+  85%      { stroke-dashoffset: 0;   opacity: 1; }
+  92%      { stroke-dashoffset: 0;   opacity: 0; }
+  93%      { stroke-dashoffset: 100; opacity: 0; }
+  100%     { stroke-dashoffset: 100; opacity: 1; }
+}
+
+@keyframes stock-trail {
+  0%, 55%  { opacity: 0; }
+  66%      { opacity: 1; }
+  85%      { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+
+/* ── Book page flip ──────────────────────────────────────────────────── */
+.icon-book .book-page-right {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}
+
+.icon-book:hover .book-page-right,
+.card:hover .icon-book .book-page-right {
+  animation: page-turn var(--anim-icon) ease-in-out infinite;
+}
+
+@keyframes page-turn {
+  0%   { transform: scaleX(1);  opacity: 1; }
+  45%  { transform: scaleX(-1); opacity: 1; }
+  60%  { transform: scaleX(-1); opacity: 0; }
+  61%  { transform: scaleX(1);  opacity: 0; }
+  100% { transform: scaleX(1);  opacity: 1; }
+}
+
+/* ── Dumbbell pump ───────────────────────────────────────────────────── */
+.icon-dumbbell .plate {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.icon-dumbbell:hover .plate,
+.card:hover .icon-dumbbell .plate {
+  animation: dumbbell-pump var(--anim-icon) ease-in-out infinite;
+}
+
+@keyframes dumbbell-pump {
+  0%, 8%    { transform: scale(1); }
+  50%       { transform: scale(1.22); }
+  92%, 100% { transform: scale(1); }
+}
+
+/* ── Controller spin ─────────────────────────────────────────────────── */
+.icon-controller .controller-body {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}
+
+.icon-controller:hover .controller-body,
+.card:hover .icon-controller .controller-body {
+  animation: controller-spin var(--anim-icon) linear infinite;
+}
+
+@keyframes controller-spin {
+  0%   { transform: rotate(0deg)   scale(1); }
+  25%  { transform: rotate(90deg)  scale(1.05); }
+  50%  { transform: rotate(180deg) scale(1.1); }
+  75%  { transform: rotate(270deg) scale(1.05); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

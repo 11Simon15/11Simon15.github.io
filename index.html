@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simon · Portfolio</title>
+  <meta name="description" content="Personal portfolio of Simon — projects, hobbies, and how to get in touch." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+
+  <script src="assets/js/image-slot.js" defer></script>
+  <script type="module" src="assets/js/main.js"></script>
+</head>
+<body>
+
+  <main class="stage paper">
+    <!-- Drifting margin doodles (populated by main.js) -->
+    <div class="drift drift--left" data-drift="left" aria-hidden="true"></div>
+    <div class="drift drift--right" data-drift="right" aria-hidden="true"></div>
+
+    <!-- Floating corner doodles (populated by main.js) -->
+    <div class="float-doodle float-doodle--tl" data-float="tl" aria-hidden="true"></div>
+    <div class="float-doodle float-doodle--tr" data-float="tr" aria-hidden="true"></div>
+    <div class="float-doodle float-doodle--bl" data-float="bl" aria-hidden="true"></div>
+    <div class="float-doodle float-doodle--br" data-float="br" aria-hidden="true"></div>
+
+    <div class="content">
+
+      <!-- ── Hero ─────────────────────────────────────────────── -->
+      <section class="hero frame frame--cross" style="--hatch-offset: 10px;">
+        <div class="frame__shadow" aria-hidden="true"></div>
+        <div class="frame__body">
+          <div class="frame__corner frame__corner--tr" aria-hidden="true"></div>
+          <div class="hero__body">
+            <div class="hero__text">
+              <div class="hero__eyebrow">Portfolio · est. 2026</div>
+              <h1 class="hero__title hand">
+                hi, i'm
+                <span class="underline">Simon<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>!
+                <span class="hero__title-sub">and this is my desk.</span>
+              </h1>
+              <p class="hero__bio">
+                ex-Coinbase · USC &amp; UIUC alum<br />
+                now: building, lifting, reading, &amp; swinging clubs.
+              </p>
+            </div>
+            <div class="hero__photo">
+              <div class="hero__photo-shadow" aria-hidden="true"></div>
+              <div class="hero__photo-frame">
+                <image-slot
+                  id="hero-photo"
+                  shape="rect"
+                  placeholder="photo of you">
+                </image-slot>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── About ────────────────────────────────────────────── -->
+      <aside class="about frame">
+        <div class="frame__shadow" aria-hidden="true"></div>
+        <div class="frame__body">
+          <div class="about__body">
+            <div class="eyebrow">about</div>
+            <svg class="sketch-rule about__rule" aria-hidden="true" viewBox="0 0 200 6" preserveAspectRatio="none"><path d="M 2 3 Q 25 1, 50 3 T 100 3 T 150 3 T 198 3" fill="none" stroke="rgba(31,24,20,0.45)" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <p class="about__text">
+              Lately: reps at the gym, pages of a good book, and a few (mostly not clean) swings on the range.
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── Projects ─────────────────────────────────────────── -->
+      <section class="section section--projects">
+        <header class="section-head">
+          <span class="section-head__num">01</span>
+          <h2 class="section-head__title hand">
+            <span class="underline">what i'm tinkering with<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+          </h2>
+          <span class="section-head__doodle section-head__doodle--rotL" data-doodle="arrow" aria-hidden="true"></span>
+        </header>
+        <!-- Featured project — the one I'm focused on right now. -->
+        <article class="featured frame frame--cross" style="--hatch-offset: 9px;">
+          <div class="frame__shadow" aria-hidden="true"></div>
+          <div class="frame__body">
+            <div class="featured__body">
+              <div class="featured__visual">
+                <div class="featured__shot-shadow" aria-hidden="true"></div>
+                <div class="featured__shot featured__shot--diagram">
+                  <object
+                    class="featured__diagram"
+                    type="image/svg+xml"
+                    data="assets/diagrams/s11-architecture.svg"
+                    aria-label="S11 Quant system architecture — animated data-flow diagram">
+                  </object>
+                </div>
+              </div>
+              <div class="featured__content">
+                <div class="featured__head">
+                  <div class="icon-box icon-box--sm">
+                    <div class="icon-box__inset" data-icon="stock" data-icon-size="42"></div>
+                  </div>
+                  <div>
+                    <div class="eyebrow">featured · 01</div>
+                    <h3 class="featured__title hand">
+                      <span class="underline">[project one]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                    </h3>
+                  </div>
+                </div>
+                <p class="featured__desc">
+                  A sentence or two on what you're building — the problem it solves and
+                  why it's worth a look. Swap this for the real story when you're ready
+                  to show it off.
+                </p>
+                <ul class="featured__tags">
+                  <li class="featured__tag">tag one</li>
+                  <li class="featured__tag">tag two</li>
+                  <li class="featured__tag">tag three</li>
+                </ul>
+                <a class="featured__cta" href="#" rel="noopener">
+                  <span class="underline">view project<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                  <span class="featured__cta-arrow" data-doodle="arrow" aria-hidden="true"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- More projects, parked for later. Uncomment the grid to show them as small cards. -->
+        <!--
+        <div class="card-grid">
+          <article class="card frame">
+            <div class="frame__shadow" aria-hidden="true"></div>
+            <div class="frame__body">
+              <div class="card__body">
+                <div class="card__head"><span class="eyebrow">proj · B</span></div>
+                <div class="card__icon-wrap">
+                  <div class="icon-box icon-box--lg">
+                    <div class="icon-box__inset" data-icon="stack" data-icon-size="70"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="card__label hand">
+                    <span class="underline">[project two]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                  </div>
+                  <div class="card__note">placeholder · swap me</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card frame">
+            <div class="frame__shadow" aria-hidden="true"></div>
+            <div class="frame__body">
+              <div class="card__body">
+                <div class="card__head"><span class="eyebrow">proj · C</span></div>
+                <div class="card__icon-wrap">
+                  <div class="icon-box icon-box--lg">
+                    <div class="icon-box__inset" data-icon="waveform" data-icon-size="70"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="card__label hand">
+                    <span class="underline">[project three]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                  </div>
+                  <div class="card__note">placeholder · swap me</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card frame">
+            <div class="frame__shadow" aria-hidden="true"></div>
+            <div class="frame__body">
+              <div class="card__body">
+                <div class="card__head"><span class="eyebrow">proj · D</span></div>
+                <div class="card__icon-wrap">
+                  <div class="icon-box icon-box--lg">
+                    <div class="icon-box__inset" data-icon="compass" data-icon-size="70"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="card__label hand">
+                    <span class="underline">[project four]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                  </div>
+                  <div class="card__note">placeholder · swap me</div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+        -->
+
+      </section>
+
+      <!-- ── Hobbies ──────────────────────────────────────────── -->
+      <section class="section section--hobbies">
+        <header class="section-head">
+          <span class="section-head__num">02</span>
+          <h2 class="section-head__title hand">
+            <span class="underline">off the clock<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+          </h2>
+          <span class="section-head__doodle section-head__doodle--rotR" data-doodle="sparkle" aria-hidden="true"></span>
+        </header>
+        <div class="card-grid">
+
+          <article class="card card--hobby frame">
+            <div class="frame__shadow" aria-hidden="true"></div>
+            <div class="frame__body">
+              <div class="card__body">
+                <div class="icon-box icon-box--md">
+                  <div class="icon-box__inset" data-icon="dumbbell" data-icon-size="54"></div>
+                </div>
+                <div class="card__label hand">
+                  <span class="underline">gym<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                </div>
+                <div class="card__note">five days in, lifting heavy-ish.</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--hobby frame">
+            <div class="frame__shadow" aria-hidden="true"></div>
+            <div class="frame__body">
+              <div class="card__body">
+                <div class="icon-box icon-box--md">
+                  <div class="icon-box__inset" data-icon="book" data-icon-size="54"></div>
+                </div>
+                <div class="card__label hand">
+                  <span class="underline">reading<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                </div>
+                <div class="card__note">non-fiction stack, mostly.</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--hobby frame">
+            <div class="frame__shadow" aria-hidden="true"></div>
+            <div class="frame__body">
+              <div class="card__body">
+                <div class="icon-box icon-box--md">
+                  <div class="icon-box__inset" data-icon="controller" data-icon-size="54"></div>
+                </div>
+                <div class="card__label hand">
+                  <span class="underline">games<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                </div>
+                <div class="card__note">single-player, story-driven.</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card--hobby frame">
+            <div class="frame__shadow" aria-hidden="true"></div>
+            <div class="frame__body">
+              <div class="card__body">
+                <div class="icon-box icon-box--md">
+                  <div class="icon-box__inset" data-icon="golf" data-icon-size="54"></div>
+                </div>
+                <div class="card__label hand">
+                  <span class="underline">golf<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                </div>
+                <div class="card__note">brand new. it's harder than it looks.</div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ── Contact ──────────────────────────────────────────── -->
+      <section class="contact frame frame--cross" style="--hatch-offset: 9px;">
+        <div class="frame__shadow" aria-hidden="true"></div>
+        <div class="frame__body">
+          <div class="contact__body">
+            <div>
+              <div class="contact__lead-eyebrow">find me</div>
+              <div class="contact__lead hand">say hello</div>
+            </div>
+            <nav class="contact__links" aria-label="Contact links">
+              <a href="mailto:simon.chan@alumni.usc.edu" class="underline">[email]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
+              <a href="https://github.com/" class="underline" rel="noopener">[github]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
+              <a href="https://www.linkedin.com/" class="underline" rel="noopener">[linkedin]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
+              <a href="https://x.com/" class="underline" rel="noopener">[twitter]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
+            </nav>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+</body>
+</html>
