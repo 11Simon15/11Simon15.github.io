@@ -16,7 +16,6 @@
   <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
 
-  <script src="assets/js/image-slot.js" defer></script>
   <script type="module" src="assets/js/main.js"></script>
 </head>
 <body>
@@ -45,7 +44,6 @@
               <h1 class="hero__title hand">
                 hi, i'm
                 <span class="underline">Simon<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>!
-                <span class="hero__title-sub">and this is my desk.</span>
               </h1>
               <p class="hero__bio">
                 ex-Coinbase · USC &amp; UIUC alum<br />
@@ -55,11 +53,7 @@
             <div class="hero__photo">
               <div class="hero__photo-shadow" aria-hidden="true"></div>
               <div class="hero__photo-frame">
-                <image-slot
-                  id="hero-photo"
-                  shape="rect"
-                  placeholder="photo of you">
-                </image-slot>
+                <img class="hero__photo-img" src="assets/img/photo.jpg" alt="Simon Chan" />
               </div>
             </div>
           </div>
@@ -113,21 +107,20 @@
                   <div>
                     <div class="eyebrow">featured · 01</div>
                     <h3 class="featured__title hand">
-                      <span class="underline">[project one]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                      <a class="underline" href="architecture.html">work in progress<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
                     </h3>
                   </div>
                 </div>
                 <p class="featured__desc">
-                  A sentence or two on what you're building — the problem it solves and
-                  why it's worth a look. Swap this for the real story when you're ready
-                  to show it off.
+                  Still actively building this one. A proper writeup and a live link
+                  are on the way — check back soon.
                 </p>
                 <ul class="featured__tags">
                   <li class="featured__tag">tag one</li>
                   <li class="featured__tag">tag two</li>
                   <li class="featured__tag">tag three</li>
                 </ul>
-                <a class="featured__cta" href="#" rel="noopener">
+                <a class="featured__cta" href="architecture.html">
                   <span class="underline">view project<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
                   <span class="featured__cta-arrow" data-doodle="arrow" aria-hidden="true"></span>
                 </a>
@@ -224,7 +217,7 @@
                 <div class="card__label hand">
                   <span class="underline">gym<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
                 </div>
-                <div class="card__note">five days in, lifting heavy-ish.</div>
+                <div class="card__note">six days in, lifting heavy-ish.</div>
               </div>
             </div>
           </article>
@@ -269,7 +262,7 @@
                 <div class="card__label hand">
                   <span class="underline">golf<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></span>
                 </div>
-                <div class="card__note">brand new. it's harder than it looks.</div>
+                <div class="card__note">it's harder than it looks.</div>
               </div>
             </div>
           </article>
@@ -288,9 +281,11 @@
             </div>
             <nav class="contact__links" aria-label="Contact links">
               <a href="mailto:simon.chan@alumni.usc.edu" class="underline">[email]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
-              <a href="https://github.com/" class="underline" rel="noopener">[github]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
-              <a href="https://www.linkedin.com/" class="underline" rel="noopener">[linkedin]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
-              <a href="https://x.com/" class="underline" rel="noopener">[twitter]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
+              <a href="https://github.com/11Simon15" class="underline" target="_blank" rel="noopener">[github]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
+              <a href="https://www.linkedin.com/in/simonchan92/" class="underline" target="_blank" rel="noopener">[linkedin]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
+<!-- No Twitter/X for now — uncomment to re-add:
+              <a href="https://x.com/" class="underline" target="_blank" rel="noopener">[twitter]<svg class="underline__svg" aria-hidden="true" viewBox="0 0 100 9" preserveAspectRatio="none"><path d="M 1 5 Q 14 2, 28 4.5 Q 42 7, 56 4 Q 70 1.5, 84 5 Q 92 6.5, 99 4" fill="none" stroke="#1f1814" stroke-width="1.7" stroke-linecap="round"/></svg></a>
+              -->
             </nav>
           </div>
         </div>

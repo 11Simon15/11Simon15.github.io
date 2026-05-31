@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S11 Quant — Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #1B1B1D;
+      --bg-darker: #121214;
+      --bg-card: #121214;
+      --text: #EEEEEE;
+      --text-dim: #a7aab5;
+      --text-faint: #686B75;
+      --accent: #FFFFFF;
+      --accent-dim: #9ca3af;
+      --border: rgba(255, 255, 255, 0.15);
+      --border-soft: rgba(167, 170, 181, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      background-image: radial-gradient(circle at 50% 0, #232325, #131315);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      font-feature-settings: "ss01", "cv11";
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      background: rgba(27, 27, 29, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      z-index: 20;
+    }
+
+    .nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+    }
+
+    .nav-brand::before {
+      content: "▸ ";
+      color: var(--accent-dim);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 5rem 2rem 4rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 5rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-block;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    h1 {
+      font-size: 3.25rem;
+      font-weight: 700;
+      margin: 0 0 1.25rem;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+
+    h1 .accent { color: var(--accent); }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 1.15rem;
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    section {
+      margin-bottom: 5rem;
+      scroll-margin-top: 100px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: 1.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+      letter-spacing: -0.015em;
+    }
+
+    h2::before {
+      content: "// ";
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+
+    .section-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-faint);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .section-meta {
+      color: var(--text-dim);
+      font-size: 1rem;
+      margin: 0 0 1.5rem;
+      max-width: 850px;
+    }
+
+    .diagram-frame {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.5rem 2rem;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .diagram-frame::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent) 50%, transparent);
+      opacity: 0.3;
+    }
+
+    .mermaid {
+      text-align: center;
+      min-height: 200px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem 2rem;
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-soft);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border-width: 2px;
+      border-style: solid;
+      background: var(--bg-card);
+      flex-shrink: 0;
+    }
+
+    .legend-swatch.filled {
+      border-color: transparent;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0 4rem;
+    }
+
+    .stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    footer {
+      margin-top: 5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-faint);
+      font-size: 0.85rem;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.8;
+    }
+
+    footer a {
+      color: var(--accent-dim);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    footer a:hover { border-bottom-color: var(--accent-dim); }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      padding: 0.12em 0.5em;
+      border-radius: 5px;
+      font-size: 0.88em;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .mermaid svg {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+    .anim-frame {
+      padding: 1rem !important;
+    }
+
+    .arch-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 78vh;
+    }
+
+    .arch-svg .m text {
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .arch-svg .m rect {
+      transition: stroke-opacity 0.3s ease, fill-opacity 0.3s ease;
+    }
+
+    .arch-svg .m:hover rect {
+      stroke-opacity: 1;
+      fill-opacity: 1;
+    }
+
+    .legend-centered {
+      justify-content: center;
+      gap: 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      h1 { font-size: 2.25rem; }
+      .container { padding: 3rem 1.25rem; }
+      .diagram-frame { padding: 1.5rem 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-brand">S11_QUANT / ARCHITECTURE</div>
+      <div class="nav-links">
+        <a href="#system">System</a>
+        <a href="#gates">Pre-Trade Gates</a>
+        <a href="#dashboard">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <header>
+      <div class="badge">Autonomous Trading Pipeline · v0 design</div>
+      <h1>S11 Quant <span class="accent">Architecture</span></h1>
+      <p class="subtitle">
+        Event-driven, modular pipeline for retail-scale perpetual futures trading.
+        Built on <code>NautilusTrader</code>. Strategy-level latency, plug-and-play
+        strategies, runtime kill switch.
+      </p>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-value">9 + 11</div>
+        <div class="stat-label">Modules + sidecars</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">6 gates</div>
+        <div class="stat-label">Signal → wire</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">&lt; 50 ms</div>
+        <div class="stat-label">Pre-trade budget</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">3 modes</div>
+        <div class="stat-label">live · paper · killed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">18 tests</div>
+        <div class="stat-label">Verification suite</div>
+      </div>
+    </div>
+
+    <section id="system">
+      <div class="section-head">
+        <h2>System Architecture</h2>
+        <span class="section-id">/ LIVE VIEW</span>
+      </div>
+      <p class="section-meta">
+        9 primary modules plus 11 sidecar actors. Every module talks only to the
+        Nautilus message bus — never to peers. Particles flowing along the gray
+        curves represent the event traffic on each topic.
+      </p>
+      <div class="diagram-frame anim-frame">
+        <svg class="arch-svg" viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <pattern id="dotgrid" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+              <circle cx="11" cy="11" r="0.7" fill="rgba(167,170,181,0.14)"/>
+            </pattern>
+            <filter id="pglow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="1.6"/>
+            </filter>
+            <filter id="boxglow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+              <feFlood flood-color="#FFFFFF" flood-opacity="0.35"/>
+              <feComposite in2="blur" operator="in" result="glowColor"/>
+              <feMerge>
+                <feMergeNode in="glowColor"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+            <!-- Arrowhead marker for all edges -->
+            <marker id="arrow" markerUnits="userSpaceOnUse" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+              <path d="M 0,1.5 L 9,5 L 0,8.5 z" fill="rgba(167,170,181,0.7)"/>
+            </marker>
+
+            <!-- Port marker (small teal dot at source of every edge) -->
+            <marker id="port" markerUnits="userSpaceOnUse" viewBox="0 0 6 6" refX="3" refY="3"
+                    markerWidth="6" markerHeight="6">
+              <circle cx="3" cy="3" r="2.5" fill="#FFFFFF"/>
+            </marker>
+
+            <!-- Edge paths (drawn behind boxes) -->
+            <!-- DATA SIDE: clean verticals from clients to engine, engine drops to bus -->
+            <path id="e-cb-data-de"     d="M 145,140 L 145,335" fill="none"/>
+            <path id="e-bit-data-de"    d="M 295,140 L 295,335" fill="none"/>
+            <path id="e-de-bus"         d="M 220,400 L 220,468" fill="none"/>
+
+            <!-- STRATEGY ↔ BUS: four clean vertical channels, two per strategy (in + out) -->
+            <path id="e-bus-s1-up"      d="M 460,468 L 460,300" fill="none"/>
+            <path id="e-s1-bus-down"    d="M 550,300 L 550,468" fill="none"/>
+            <path id="e-bus-s2-up"      d="M 655,468 L 655,300" fill="none"/>
+            <path id="e-s2-bus-down"    d="M 745,300 L 745,468" fill="none"/>
+
+            <!-- PORTFOLIO ↔ BUS: two clean verticals threading the wider 45px gap between strategies (x 580–625) -->
+            <path id="e-bus-pf-up"      d="M 595,468 L 595,140" fill="none"/>
+            <path id="e-pf-bus-down"    d="M 610,140 L 610,468" fill="none"/>
+
+            <!-- EXEC SIDE: clean verticals between exec engine and exec clients, two per client (in + out) -->
+            <path id="e-bus-risk"       d="M 850,490 L 880,490" fill="none"/>
+            <path id="e-risk-exec-up"   d="M 990,468 L 990,395" fill="none"/>
+            <path id="e-exec-cb-up"     d="M 900,335 L 900,140" fill="none"/>
+            <path id="e-cb-exec-down"   d="M 950,140 L 950,335" fill="none"/>
+            <path id="e-exec-ibkr-up"   d="M 1050,335 L 1050,140" fill="none"/>
+            <path id="e-ibkr-exec-down" d="M 1100,140 L 1100,335" fill="none"/>
+            <path id="e-exec-bus"       d="M 920,395 C 905,430 880,470 850,490" fill="none"/>
+
+            <!-- BUS → CACHE → STORAGE: all centered (x=460) for clean vertical flow -->
+            <path id="e-bus-cache"      d="M 460,523 L 460,575" fill="none"/>
+            <path id="e-cache-storage"  d="M 460,630 L 460,660" fill="none"/>
+          </defs>
+
+          <!-- Background dotted grid -->
+          <rect width="1200" height="780" fill="url(#dotgrid)"/>
+
+          <!-- ============ CLUSTER GROUP BOXES (uniform 15px inner padding) ============ -->
+          <g class="cluster">
+            <rect x="65" y="65" width="310" height="90" rx="5" fill="none" stroke="rgba(167,170,181,0.22)" stroke-width="1" stroke-dasharray="3,4"/>
+            <text x="77" y="55" font-family="JetBrains Mono, monospace" font-size="10" fill="#686B75" letter-spacing="2">DATA ADAPTERS</text>
+          </g>
+          <g class="cluster">
+            <rect x="490" y="65" width="230" height="90" rx="5" fill="none" stroke="rgba(167,170,181,0.22)" stroke-width="1" stroke-dasharray="3,4"/>
+            <text x="502" y="55" font-family="JetBrains Mono, monospace" font-size="10" fill="#686B75" letter-spacing="2">PORTFOLIO</text>
+          </g>
+          <g class="cluster">
+            <rect x="415" y="200" width="375" height="115" rx="5" fill="none" stroke="rgba(167,170,181,0.22)" stroke-width="1" stroke-dasharray="3,4"/>
+            <text x="427" y="190" font-family="JetBrains Mono, monospace" font-size="10" fill="#686B75" letter-spacing="2">TRADER</text>
+          </g>
+          <g class="cluster">
+            <rect x="845" y="65" width="310" height="90" rx="5" fill="none" stroke="rgba(167,170,181,0.22)" stroke-width="1" stroke-dasharray="3,4"/>
+            <text x="857" y="55" font-family="JetBrains Mono, monospace" font-size="10" fill="#686B75" letter-spacing="2">EXEC ADAPTERS</text>
+          </g>
+          <g class="cluster">
+            <rect x="75" y="453" width="790" height="85" rx="5" fill="none" stroke="rgba(167,170,181,0.22)" stroke-width="1" stroke-dasharray="3,4"/>
+            <text x="87" y="443" font-family="JetBrains Mono, monospace" font-size="10" fill="#686B75" letter-spacing="2">MESSAGE BUS</text>
+          </g>
+          <g class="cluster">
+            <rect x="75" y="560" width="770" height="85" rx="5" fill="none" stroke="rgba(167,170,181,0.22)" stroke-width="1" stroke-dasharray="3,4"/>
+            <text x="87" y="550" font-family="JetBrains Mono, monospace" font-size="10" fill="#686B75" letter-spacing="2">CACHE</text>
+          </g>
+
+          <!-- ============ EDGES (visible curves with port dot + arrowhead) ============ -->
+          <g class="edges" stroke="rgba(167,170,181,0.32)" stroke-width="1" fill="none" marker-start="url(#port)" marker-end="url(#arrow)">
+            <use href="#e-cb-data-de"/>
+            <use href="#e-bit-data-de"/>
+            <use href="#e-de-bus"/>
+            <use href="#e-bus-s1-up"/>
+            <use href="#e-bus-s2-up"/>
+            <use href="#e-s1-bus-down"/>
+            <use href="#e-s2-bus-down"/>
+            <use href="#e-bus-pf-up"/>
+            <use href="#e-pf-bus-down"/>
+            <use href="#e-bus-risk"/>
+            <use href="#e-risk-exec-up"/>
+            <use href="#e-exec-cb-up"/>
+            <use href="#e-exec-ibkr-up"/>
+            <use href="#e-cb-exec-down"/>
+            <use href="#e-ibkr-exec-down"/>
+            <use href="#e-exec-bus"/>
+            <use href="#e-bus-cache"/>
+            <use href="#e-cache-storage"/>
+          </g>
+
+          <!-- ============ ANIMATED PARTICLES ============ -->
+          <g class="particles" fill="#FFFFFF" filter="url(#pglow)">
+            <!-- Coinbase data → Data Engine (3 particles) -->
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath href="#e-cb-data-de"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0.9s"><mpath href="#e-cb-data-de"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.8s"><mpath href="#e-cb-data-de"/></animateMotion></circle>
+
+            <!-- Bitnomial data → Data Engine (2 particles, slower since pending) -->
+            <circle r="2" opacity="0.5"><animateMotion dur="3.4s" repeatCount="indefinite" begin="0.4s"><mpath href="#e-bit-data-de"/></animateMotion></circle>
+            <circle r="2" opacity="0.5"><animateMotion dur="3.4s" repeatCount="indefinite" begin="2.1s"><mpath href="#e-bit-data-de"/></animateMotion></circle>
+
+            <!-- Data Engine → Bus -->
+            <circle r="2.4"><animateMotion dur="1.4s" repeatCount="indefinite" begin="0s"><mpath href="#e-de-bus"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="1.4s" repeatCount="indefinite" begin="0.7s"><mpath href="#e-de-bus"/></animateMotion></circle>
+
+            <!-- Bus → Strategy 1 (signals consumption) -->
+            <circle r="2.4"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0.3s"><mpath href="#e-bus-s1-up"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.5s"><mpath href="#e-bus-s1-up"/></animateMotion></circle>
+
+            <!-- Bus → Strategy 2 -->
+            <circle r="2.4"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0.8s"><mpath href="#e-bus-s2-up"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="2.4s" repeatCount="indefinite" begin="2.0s"><mpath href="#e-bus-s2-up"/></animateMotion></circle>
+
+            <!-- Strategy 1 → Bus (signal emit) -->
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.0s"><mpath href="#e-s1-bus-down"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="2.5s"><mpath href="#e-s1-bus-down"/></animateMotion></circle>
+
+            <!-- Strategy 2 → Bus -->
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.4s"><mpath href="#e-s2-bus-down"/></animateMotion></circle>
+
+            <!-- Bus → Portfolio (state sync up) -->
+            <circle r="2.4"><animateMotion dur="3.6s" repeatCount="indefinite" begin="0.2s"><mpath href="#e-bus-pf-up"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="3.6s" repeatCount="indefinite" begin="2.2s"><mpath href="#e-bus-pf-up"/></animateMotion></circle>
+
+            <!-- Portfolio → Bus (state sync down) -->
+            <circle r="2.4"><animateMotion dur="3.6s" repeatCount="indefinite" begin="1.2s"><mpath href="#e-pf-bus-down"/></animateMotion></circle>
+
+            <!-- Bus → Risk Engine -->
+            <circle r="2.4"><animateMotion dur="1.0s" repeatCount="indefinite" begin="0.4s"><mpath href="#e-bus-risk"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="1.0s" repeatCount="indefinite" begin="1.4s"><mpath href="#e-bus-risk"/></animateMotion></circle>
+
+            <!-- Risk → Exec Engine (orders.intent → smart routing) -->
+            <circle r="2.4"><animateMotion dur="1.2s" repeatCount="indefinite" begin="0.6s"><mpath href="#e-risk-exec-up"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="1.2s" repeatCount="indefinite" begin="1.5s"><mpath href="#e-risk-exec-up"/></animateMotion></circle>
+
+            <!-- Exec → Coinbase exec client (submit) -->
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="0.4s"><mpath href="#e-exec-cb-up"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.7s"><mpath href="#e-exec-cb-up"/></animateMotion></circle>
+
+            <!-- Exec → IBKR exec client (submit) -->
+            <circle r="2.4"><animateMotion dur="2.6s" repeatCount="indefinite" begin="1.1s"><mpath href="#e-exec-ibkr-up"/></animateMotion></circle>
+
+            <!-- Coinbase exec → back to Exec Engine (fills) -->
+            <circle r="2.4"><animateMotion dur="2.8s" repeatCount="indefinite" begin="1.3s"><mpath href="#e-cb-exec-down"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="2.8s" repeatCount="indefinite" begin="2.7s"><mpath href="#e-cb-exec-down"/></animateMotion></circle>
+
+            <!-- IBKR exec → back to Exec Engine (fills) -->
+            <circle r="2.4"><animateMotion dur="2.8s" repeatCount="indefinite" begin="2.0s"><mpath href="#e-ibkr-exec-down"/></animateMotion></circle>
+
+            <!-- Exec → Bus (fills.*, orders.*) -->
+            <circle r="2.4"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0.9s"><mpath href="#e-exec-bus"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="2.2s" repeatCount="indefinite" begin="2.0s"><mpath href="#e-exec-bus"/></animateMotion></circle>
+
+            <!-- Bus → Cache -->
+            <circle r="2.4"><animateMotion dur="1.6s" repeatCount="indefinite" begin="0.3s"><mpath href="#e-bus-cache"/></animateMotion></circle>
+            <circle r="2.4"><animateMotion dur="1.6s" repeatCount="indefinite" begin="1.1s"><mpath href="#e-bus-cache"/></animateMotion></circle>
+
+            <!-- Cache → Storage -->
+            <circle r="2.2" opacity="0.7"><animateMotion dur="3.2s" repeatCount="indefinite" begin="0.5s"><mpath href="#e-cache-storage"/></animateMotion></circle>
+            <circle r="2.2" opacity="0.7"><animateMotion dur="3.2s" repeatCount="indefinite" begin="2.0s"><mpath href="#e-cache-storage"/></animateMotion></circle>
+          </g>
+
+          <!-- ============ MODULE BOXES ============ -->
+          <!-- DATA CLIENT Coinbase -->
+          <g class="m">
+            <rect x="80" y="80" width="130" height="60" rx="4" fill="#121214" stroke="rgba(167,170,181,0.4)" stroke-width="1"/>
+            <text x="145" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#EEEEEE" letter-spacing="1.2">DATA CLIENT</text>
+            <text x="145" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">Coinbase</text>
+          </g>
+
+          <!-- DATA CLIENT Bitnomial (pending — dimmed) -->
+          <g class="m" opacity="0.55">
+            <rect x="230" y="80" width="130" height="60" rx="4" fill="#121214" stroke="rgba(167,170,181,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="295" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#EEEEEE" letter-spacing="1.2">DATA CLIENT</text>
+            <text x="295" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">Bitnomial · pending</text>
+          </g>
+
+          <!-- PORTFOLIO (glowing teal) -->
+          <g class="m glow">
+            <rect x="505" y="80" width="200" height="60" rx="5" fill="#1c1c1e" stroke="#FFFFFF" stroke-width="1.5" filter="url(#boxglow)"/>
+            <text x="605" y="103" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" letter-spacing="1.5">PORTFOLIO</text>
+            <text x="605" y="122" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">positions · margin · pnl</text>
+          </g>
+
+          <!-- STRATEGY funding_momentum -->
+          <g class="m">
+            <rect x="430" y="215" width="150" height="85" rx="4" fill="#121214" stroke="rgba(167,170,181,0.4)" stroke-width="1"/>
+            <text x="505" y="245" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#EEEEEE" letter-spacing="1.2">STRATEGY</text>
+            <text x="505" y="265" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">funding_momentum</text>
+            <text x="505" y="282" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#9ca3af" letter-spacing="0.5">nBTC-PERP.COINBASE</text>
+          </g>
+
+          <!-- STRATEGY basis_arb -->
+          <g class="m">
+            <rect x="625" y="215" width="150" height="85" rx="4" fill="#121214" stroke="rgba(167,170,181,0.4)" stroke-width="1"/>
+            <text x="700" y="245" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#EEEEEE" letter-spacing="1.2">STRATEGY</text>
+            <text x="700" y="265" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">basis_arb</text>
+            <text x="700" y="282" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#9ca3af" letter-spacing="0.5">Coinbase ↔ CME</text>
+          </g>
+
+          <!-- EXEC CLIENT Coinbase -->
+          <g class="m">
+            <rect x="860" y="80" width="130" height="60" rx="4" fill="#121214" stroke="rgba(167,170,181,0.4)" stroke-width="1"/>
+            <text x="925" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#EEEEEE" letter-spacing="1.2">EXEC CLIENT</text>
+            <text x="925" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">Coinbase</text>
+          </g>
+
+          <!-- EXEC CLIENT IBKR/CME -->
+          <g class="m">
+            <rect x="1010" y="80" width="130" height="60" rx="4" fill="#121214" stroke="rgba(167,170,181,0.4)" stroke-width="1"/>
+            <text x="1075" y="105" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#EEEEEE" letter-spacing="1.2">EXEC CLIENT</text>
+            <text x="1075" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">IBKR · CME</text>
+          </g>
+
+          <!-- DATA ENGINE (glowing teal) -->
+          <g class="m glow">
+            <rect x="110" y="335" width="220" height="65" rx="5" fill="#1c1c1e" stroke="#FFFFFF" stroke-width="1.5" filter="url(#boxglow)"/>
+            <text x="220" y="361" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" letter-spacing="1.5">DATA ENGINE</text>
+            <text x="220" y="380" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">subscriptions · normalize · features</text>
+          </g>
+
+          <!-- EXEC ENGINE (glowing teal) -->
+          <g class="m glow">
+            <rect x="880" y="335" width="220" height="60" rx="5" fill="#1c1c1e" stroke="#FFFFFF" stroke-width="1.5" filter="url(#boxglow)"/>
+            <text x="990" y="358" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" letter-spacing="1.5">EXEC ENGINE</text>
+            <text x="990" y="377" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">smart routing · OMS · idempotency</text>
+          </g>
+
+          <!-- MESSAGE BUS (the centerpiece) -->
+          <g class="m glow bus">
+            <rect x="90" y="468" width="760" height="55" rx="6" fill="#222226" stroke="#FFFFFF" stroke-width="1.5" filter="url(#boxglow)">
+              <animate attributeName="stroke-opacity" values="0.7;1;0.7" dur="2.5s" repeatCount="indefinite"/>
+            </rect>
+            <text x="470" y="491" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" letter-spacing="2.5">MESSAGE BUS</text>
+            <text x="470" y="510" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#a7aab5" letter-spacing="0.5">pub/sub · data · features · signals · orders · fills · risk · attribution · mode</text>
+          </g>
+
+          <!-- RISK ENGINE (glowing teal, right of bus) -->
+          <g class="m glow">
+            <rect x="880" y="468" width="220" height="55" rx="5" fill="#1c1c1e" stroke="#FFFFFF" stroke-width="1.5" filter="url(#boxglow)"/>
+            <text x="990" y="491" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" letter-spacing="1.5">RISK ENGINE</text>
+            <text x="990" y="510" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">pre|post-trade · kill switch</text>
+          </g>
+
+          <!-- CACHE (wide, glow-teal core engine) -->
+          <g class="m glow">
+            <rect x="90" y="575" width="740" height="55" rx="5" fill="#1c1c1e" stroke="#FFFFFF" stroke-width="1.5" filter="url(#boxglow)"/>
+            <text x="460" y="598" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" letter-spacing="2">CACHE</text>
+            <text x="460" y="617" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">instruments · orders · positions · features · custom</text>
+          </g>
+
+          <!-- STORAGE (centered under Cache at x=460) -->
+          <g class="m">
+            <rect x="300" y="660" width="320" height="50" rx="5" fill="#121214" stroke="rgba(167,170,181,0.4)" stroke-width="1"/>
+            <text x="460" y="682" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#EEEEEE" letter-spacing="2">STORAGE</text>
+            <text x="460" y="699" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#a7aab5">TimescaleDB · Parquet · event journal</text>
+          </g>
+        </svg>
+
+        <div class="legend legend-centered">
+          <div class="legend-item"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFFFFF;box-shadow:0 0 6px #FFFFFF;margin-right:0.5rem"></span>Data flow</div>
+          <div class="legend-item"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;border:1.5px solid #FFFFFF;background:#1c1c1e;box-shadow:0 0 6px rgba(255,255,255,0.3);margin-right:0.5rem"></span>Core engine</div>
+          <div class="legend-item"><span class="legend-swatch" style="border-color:rgba(167,170,181,0.5)"></span>Module / adapter</div>
+          <div class="legend-item"><span class="legend-swatch" style="border-color:rgba(167,170,181,0.3); border-style:dashed"></span>Pending</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gates">
+      <div class="section-head">
+        <h2>Pre-Trade Pipeline / Consensus Gates</h2>
+        <span class="section-id">/ SIGNAL → WIRE</span>
+      </div>
+      <p class="section-meta">
+        Six sequential gates between a strategy emitting a signal and an order
+        hitting the exchange. Each gate can <em>reject</em>, <em>trim</em>, or
+        <em>pass through</em>. Target end-to-end budget: under 50 ms.
+      </p>
+      <div class="diagram-frame">
+        <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant S as Strategy
+    participant V as SignalValidator
+    participant A as PortfolioAggregator
+    participant Z as PositionSizer
+    participant R as RiskOverlay
+    participant I as IdempotencyOMS
+    participant E as ExecutionEngine
+    participant X as Exchange
+
+    S->>V: SignalEvent (side, strength, ttl, meta)
+    V->>V: schema, ttl, strategy enabled, rate limit
+    alt rejected
+        V-->>S: risk.rejected.signal_invalid
+    else passed
+        V->>A: validated signal
+        A->>A: combine across strategies, allocate capital
+        A->>Z: target position
+        Z->>Z: delta, vol-target, tick rounding
+        Z->>R: candidate order
+        R->>R: A - sanity (qty, collar, ADV, instrument live)
+        R->>R: B - margin (pre-trade sim, exposure caps)
+        R->>R: C - envelope (loss limit, drawdown, killswitch)
+        R->>R: D - cross-strategy (rate-limit, no unwind conflict)
+        alt any layer rejects
+            R-->>S: risk.rejected.reason
+        else borderline soft-cap
+            R-->>S: risk.trimmed
+            R->>I: trimmed orders.intent
+        else all pass
+            R->>I: orders.intent
+        end
+        I->>I: clientOrderId = hash(strategy_id, intent, time_bucket)
+        I->>E: deduplicated intent
+        E->>E: smart routing (TWAP, passive, iceberg)
+        E->>X: submit
+        X-->>E: ack, partial fill, fill, reject
+        E-->>S: orders.id.status, fills.id
+        E-->>R: post-trade slippage reconcile
+    end
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard">
+      <div class="section-head">
+        <h2>Operator Dashboard / Latency Isolation</h2>
+        <span class="section-id">/ READ-SIDE PROJECTION</span>
+      </div>
+      <p class="section-meta">
+        ProjectionWriter is fire-and-forget — Redis can die without affecting
+        trading. Dashboard API runs in a separate process, reads from Redis +
+        TimescaleDB only, never touches the bus. Controls flow back through a
+        small local-socket interface.
+      </p>
+      <div class="diagram-frame">
+        <div class="mermaid">
+flowchart LR
+    subgraph TN["TRADING NODE - in-process, Rust core"]
+        BUS{{"Message Bus"}}
+        PW["ProjectionWriter Actor<br/>low-priority subscriber<br/>fire-and-forget writes"]
+        CA["Control API Actor<br/>receives commands<br/>publishes to bus"]
+        BUS -.-> PW
+        CA -.-> BUS
+    end
+
+    subgraph STORE["Projection Store - sidecar"]
+        RED[("Redis<br/>current state:<br/>balances, positions<br/>strategies, mode")]
+        TS[("TimescaleDB<br/>history:<br/>equity, PnL<br/>fills, drawdown")]
+    end
+
+    subgraph DASH["DASHBOARD SERVICE - separate process"]
+        API["FastAPI server<br/>REST + WebSocket"]
+    end
+
+    subgraph FE["FRONTEND - separate process"]
+        UI["React/Svelte UI<br/>positions, PnL, controls"]
+    end
+
+    PW ==>|"async; never blocks bus"| RED
+    PW ==>|"async"| TS
+    API ==>|"reads"| RED
+    API ==>|"reads"| TS
+    UI ==>|"REST poll 1-2s + WebSocket push"| API
+    UI -.->|"control: kill, mode, toggle"| API
+    API -.->|"forward via local socket"| CA
+
+    classDef bus fill:#FFFFFF,stroke:#FFFFFF,stroke-width:3px,color:#0a0a0a
+    classDef proj fill:#121214,stroke:#9ca3af,stroke-width:2px,color:#eee
+    classDef api fill:#121214,stroke:#d4d4d8,stroke-width:2px,color:#eee
+    classDef ui fill:#121214,stroke:#f4f4f5,stroke-width:2px,color:#eee
+    class BUS bus
+    class RED,TS proj
+    class PW,CA,API api
+    class UI ui
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Built on <a href="https://nautilustrader.io/" target="_blank">NautilusTrader</a>
+    </footer>
+
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        fontFamily: 'Inter, system-ui, sans-serif',
+        fontSize: '14px',
+        primaryColor: '#121214',
+        primaryTextColor: '#EEEEEE',
+        primaryBorderColor: '#FFFFFF',
+        lineColor: '#a7aab5',
+        secondaryColor: '#1B1B1D',
+        tertiaryColor: '#1B1B1D',
+        background: '#1B1B1D',
+        mainBkg: '#121214',
+        secondBkg: '#1B1B1D',
+        textColor: '#EEEEEE',
+        nodeTextColor: '#EEEEEE',
+        clusterBkg: 'rgba(255, 255, 255, 0.03)',
+        clusterBorder: 'rgba(255, 255, 255, 0.25)',
+        edgeLabelBackground: '#121214',
+        actorBkg: '#121214',
+        actorBorder: '#FFFFFF',
+        actorTextColor: '#EEEEEE',
+        actorLineColor: '#9ca3af',
+        signalColor: '#a7aab5',
+        signalTextColor: '#EEEEEE',
+        sequenceNumberColor: '#0a0a0a',
+        labelBoxBkgColor: '#FFFFFF',
+        labelBoxBorderColor: '#FFFFFF',
+        labelTextColor: '#0a0a0a',
+        loopTextColor: '#EEEEEE',
+        noteBkgColor: 'rgba(255, 255, 255, 0.08)',
+        noteBorderColor: '#FFFFFF',
+        noteTextColor: '#EEEEEE',
+        activationBkgColor: 'rgba(255, 255, 255, 0.2)',
+        activationBorderColor: '#FFFFFF'
+      },
+      flowchart: {
+        curve: 'basis',
+        padding: 20,
+        nodeSpacing: 50,
+        rankSpacing: 70,
+        useMaxWidth: true
+      },
+      sequence: {
+        actorMargin: 50,
+        diagramMarginX: 20,
+        diagramMarginY: 30,
+        messageMargin: 45,
+        useMaxWidth: true
+      }
+    });
+  </script>
+</body>
+</html>
